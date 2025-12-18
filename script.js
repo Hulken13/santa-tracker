@@ -156,6 +156,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 animateSantaStraight(startLat, startLon, destLat, destLon, santaMarker, santaPath, arrivalTime);
             });
+
+        // Add Click Event for Sound
+        santaMarker.on('click', () => {
+            const msg = new SpeechSynthesisUtterance("Ho ho ho! God Jul!");
+            msg.lang = 'sv-SE';
+            msg.rate = 0.8; // A bit slower, more Santa-like
+            msg.pitch = 0.8; // Deeper voice
+            window.speechSynthesis.speak(msg);
+
+            // Also bounce the icon for effect (simple CSS class toggle could work, but let's just stick to sound for now or add a little popup)
+            santaMarker.bindPopup("Ho ho ho! 🎅").openPopup();
+        });
     }
 
     // Helper: Calculate distance between two points in meters
