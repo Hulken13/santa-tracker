@@ -159,13 +159,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Add Click Event for Sound
         santaMarker.on('click', () => {
-            const msg = new SpeechSynthesisUtterance("Ho ho ho! God Jul!");
-            msg.lang = 'sv-SE';
-            msg.rate = 0.8; // A bit slower, more Santa-like
-            msg.pitch = 0.8; // Deeper voice
+            // Cancel any ongoing speech to prevent queueing
+            window.speechSynthesis.cancel();
+
+            const text = "Ho ho ho! God Jul!";
+            const msg = new SpeechSynthesisUtterance(text);
+
+            // Try to find a Swedish voice, fallback to any default
+            const voices = window.speechSynthesis.getVoices();
+            const svVoice = voices.find(v => v.lang.includes('sv') || v.lang.includes('SE'));
+
+            if (svVoice) {
+                msg.voice = svVoice;
+                msg.lang = 'sv-SE';
+            }
+
+            // Santa Voice Tuning
+            // Pitch: Lower is deeper (0.1 - 2). 
+            // Rate: Slower is more "big/heavy" (0.1 - 10).
+            msg.rate = 0.7;
+            msg.pitch = 0.1; // Extremely deep to mask the robotic tone
+
+            console.log(`Speaking: "${text}" using voice: ${msg.voice ? msg.voice.name : 'default'}`);
             window.speechSynthesis.speak(msg);
 
-            // Also bounce the icon for effect (simple CSS class toggle could work, but let's just stick to sound for now or add a little popup)
             santaMarker.bindPopup("Ho ho ho! 🎅").openPopup();
         });
     }
