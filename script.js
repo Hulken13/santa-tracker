@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let santaInterval = null;
     let destinationLatLng = null;
     let santaPath = null;
+    let houseMarker = null;
 
     // UI Elements
     const addressInput = document.getElementById('address');
@@ -79,14 +80,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startTracking(destLat, destLon, arrivalTimeStr) {
         // Clear existing layers
+        if (houseMarker) map.removeLayer(houseMarker);
         if (santaMarker) map.removeLayer(santaMarker);
         if (santaPath) map.removeLayer(santaPath);
         if (santaInterval) clearInterval(santaInterval);
 
         // Add House Marker
-        L.marker([destLat, destLon], { icon: houseIcon })
-            .addTo(map)
-            .bindPopup("Mål!")
+        houseMarker = L.marker([destLat, destLon], { icon: houseIcon })
+            .addTo(map);
+
+        houseMarker.bindPopup("Mål!")
             .openPopup();
 
         // Start ~4-5km away in a random direction
